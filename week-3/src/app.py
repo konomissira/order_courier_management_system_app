@@ -1,5 +1,36 @@
+import json
+
+# File Handling Functions
+def read_file(file_name):
+    """Reads a text file and returns the contents as a list of lines."""
+    try:
+        with open(file_name, 'r') as file:
+            return [line.strip() for line in file.readlines()]
+    except FileNotFoundError:
+        return []  # Return an empty list if file not found
+
+def write_file(file_name, data):
+    """Writes a list of items to a text file, each item on a new line."""
+    with open(file_name, 'w') as file:
+        for item in data:
+            file.write(f"{item}\n")
+
+def read_json(file_name):
+    """Reads a JSON file and returns the data."""
+    try:
+        with open(file_name, 'r') as file:
+            return json.load(file)
+    except FileNotFoundError:
+        return []  # Return an empty list if file not found
+
+def write_json(file_name, data):
+    """Writes data to a JSON file."""
+    with open(file_name, 'w') as file:
+        json.dump(data, file, indent=4)
+
+
 # Main Menu
-menu_options = ['Exit App', 'Print Products Menu', 'Print Orders Menu', 'Print Couriers Menu']
+menu_options = ['Exit App', 'Print Products Menu', 'Print Couriers Menu', 'Print Orders Menu']
 
 # Products Menu
 products_menu = ['Return to Main Menu', 'Print Products List', 'Add new Product', 'Update Existing Product', 'Delete Product']
@@ -10,29 +41,10 @@ orders_menu = ['Return to Main Menu', 'Print Customer Order', 'Create New Order'
 # Couriers Menu
 couriers_menu = ['Return to Main Menu', 'Print Courier List', 'Create New Courier', 'Update Existing Courier', 'Delete Courier']
 
-# Products List
-#products_list = ['Latte', 'Mocha', 'Hot Chocolate', 'English Breakfast Tea']
-
-# Courier List
-#couriers = ['Yodel', 'DHL', 'DPD']
-
-# Order List
-orders = [
-    {
-        "customer_name": "John",
-        "customer_address": "Unit 2, 12 Main Street, somewhere",
-        "customer_phone": "0300000099",
-        "status": "preparing",
-        "items": [{'name': 'Tuna Toast', 'quantity': 1}, {'name': 'Americano', 'quantity': 2}]
-    },
-    {
-        "customer_name": "Jane",
-        "customer_address": "123 Elm Street",
-        "customer_phone": "0400000011",
-        "status": "completed",
-        "items": [{'name': 'Hot Chocolate', 'quantity': 1}]
-    }
-]
+# Load data from files
+couriers = read_file('../data/couriers.txt')
+products_list = read_file('../data/products_list.txt')
+orders = read_json('../data/orders.json')
 
 # Display Main Menu
 def display_main_menu():
@@ -61,6 +73,52 @@ def display_menu_courier():
     for i, option in enumerate(couriers_menu):
         print(f'{i} : {option}')
     print()
+
+# Display Courier List
+def display_courier_list():
+    print("Courier List:")
+    for i, courier in enumerate(couriers):
+        print(f"{i + 1}: {courier}")
+    print()
+
+# Create New Courier
+def create_new_courier():
+    new_courier = input("Enter the name of the new courier: ").strip()
+    if new_courier:
+        couriers.append(new_courier)
+        print(f"Courier '{new_courier}' added successfully.")
+    else:
+        print("Courier name cannot be empty.")
+
+# Update Existing Courier
+def update_existing_courier():
+    display_courier_list()
+    try:
+        courier_index = int(input("Enter the courier number to update: ")) - 1
+        if 0 <= courier_index < len(couriers):
+            new_name = input("Enter the new name for the courier: ").strip()
+            if new_name:
+                couriers[courier_index] = new_name
+                print(f"Courier updated to '{new_name}'.")
+            else:
+                print("Courier name cannot be empty.")
+        else:
+            print("Invalid courier number.")
+    except ValueError:
+        print("Please enter a valid number.")
+
+# Delete Courier
+def delete_courier():
+    display_courier_list()
+    try:
+        courier_index = int(input("Enter the courier number to delete: ")) - 1
+        if 0 <= courier_index < len(couriers):
+            deleted_courier = couriers.pop(courier_index)
+            print(f"Courier '{deleted_courier}' deleted successfully.")
+        else:
+            print("Invalid courier number.")
+    except ValueError:
+        print("Please enter a valid number.")
 
 # Display Customer Order
 def display_customer_order():
@@ -201,6 +259,8 @@ def delete_order():
     except ValueError:
         print("Invalid input.")
 
+
+# Main app loop
 def main():
     do_loop = True
 
@@ -209,7 +269,12 @@ def main():
         user_input = int(input('Choose an Option: '))
 
         if user_input == 0:
-            print("Exiting app...")
+            # Save data to files
+            write_file('../data/couriers.txt', couriers)
+            write_file('../data/products_list.txt', products_list)
+            write_json('../data/orders.json', orders)
+            
+            print("Exiting app... Data saved.")
             do_loop = False
         elif user_input == 1:
             product_loop = True
@@ -221,15 +286,9 @@ def main():
                     product_loop = False
                 elif product_input == 1:
                     print("Products List:")
-                    ####################################
-                    file = open("../data/products_list.txt", "r")
-                    lines = file.readlines()
-                    for line in lines:
-                        print(line)
-                    ####################################
-                    # for product in products_list:
-                    #     print(product)
-                    # print()
+                    for product in products_list:
+                        print(product)
+                    print()
                 elif product_input == 2:
                     new_product = input('Enter the product name to be added: ')
                     products_list.append(new_product)
@@ -253,6 +312,23 @@ def main():
                 else:
                     print("Invalid option. Please try again.")
         elif user_input == 2:
+            courier_loop = True
+            while courier_loop:
+                display_menu_courier()
+                courier_input = int(input('Choose an Option: '))
+                if courier_input == 0:
+                    courier_loop = False
+                elif courier_input == 1:
+                    display_courier_list()
+                elif courier_input == 2:
+                    create_new_courier()
+                elif courier_input == 3:
+                    update_existing_courier()
+                elif courier_input == 4:
+                    delete_courier()
+                else:
+                    print("Invalid option. Please try again.")
+        elif user_input == 3:
             order_loop = True
             while order_loop:
                 display_menu_order()
@@ -272,24 +348,9 @@ def main():
                     delete_order()
                 else:
                     print("Invalid option. Please try again.")
-        elif user_input == 3:
-            courier_loop = True
-            while courier_loop:
-                display_menu_courier()
-                courier_input = int(input('Choose an Option: '))
-                if courier_input == 0:
-                    courier_loop = False
-                elif courier_input == 1:
-                    pass
-                elif courier_input == 2:
-                    pass
-                elif courier_input == 3:
-                    pass
-                elif courier_input == 4:
-                    pass
-                else:
-                    print("Invalid option. Please try again.")
         else:
             print("Invalid option. Please choose a valid option.")
 
+
+# Run the main function
 main()
