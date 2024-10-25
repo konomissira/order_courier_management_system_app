@@ -42,5 +42,21 @@
                 "quantity": 2
             }
         ]
+    },
+    {
+        "customer_name": "Mo",
+        "customer_address": "67 small street UK",
+        "customer_phone": "0908060456",
+        "status": "preparing",
+        "items": [
+            {
+                "name": "Toast",
+                "quantity": 2
+            },
+            {
+                "name": "Coca Cola",
+                "quantity": 2
+            }
+        ]
     }
 ]

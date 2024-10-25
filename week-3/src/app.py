@@ -67,6 +67,39 @@ def display_menu_order():
         print(f"{i} : {option}")
     print('****************************************')
 
+# Display Product List
+def display_product_list():
+    print("Products List:")
+    for product in products_list:
+        print(product)
+    print()
+
+# Add New Product
+def add_new_product():
+    new_product = input('Enter the product name to be added: ')
+    products_list.append(new_product)
+    print(f"Product '{new_product}' added successfully!")
+
+# Update Existing Product
+def update_existing_product():
+        for i, product in enumerate(products_list):
+            print(f"{i} : {product}")
+        product_index = int(input('Choose product index to be edited: '))
+        new_name = input('Enter new name: ')
+        products_list[product_index] = new_name
+        print(f"Product updated to: {new_name}")
+
+# Delete Product
+def delete_product():
+    for i, product in enumerate(products_list):
+        print(f"{i} : {product}")
+    product_name = input('Enter the product name to delete: ')
+    if product_name in products_list:
+        products_list.remove(product_name)
+        print(f"Product '{product_name}' deleted successfully!")
+    else:
+        print(f"Product '{product_name}' not found.")
+
 # Display Menu Courier
 def display_menu_courier():
     print('Couriers Menu')
@@ -285,30 +318,30 @@ def main():
                 if product_input == 0:
                     product_loop = False
                 elif product_input == 1:
-                    print("Products List:")
-                    for product in products_list:
-                        print(product)
-                    print()
+                    display_product_list()
                 elif product_input == 2:
-                    new_product = input('Enter the product name to be added: ')
-                    products_list.append(new_product)
-                    print(f"Product '{new_product}' added successfully!")
+                    # new_product = input('Enter the product name to be added: ')
+                    # products_list.append(new_product)
+                    # print(f"Product '{new_product}' added successfully!")
+                    add_new_product()
                 elif product_input == 3:
-                    for i, product in enumerate(products_list):
-                        print(f"{i} : {product}")
-                    product_index = int(input('Choose product index to be edited: '))
-                    new_name = input('Enter new name: ')
-                    products_list[product_index] = new_name
-                    print(f"Product updated to: {new_name}")
+                    # for i, product in enumerate(products_list):
+                    #     print(f"{i} : {product}")
+                    # product_index = int(input('Choose product index to be edited: '))
+                    # new_name = input('Enter new name: ')
+                    # products_list[product_index] = new_name
+                    # print(f"Product updated to: {new_name}")
+                    update_existing_product()
                 elif product_input == 4:
-                    for i, product in enumerate(products_list):
-                        print(f"{i} : {product}")
-                    product_name = input('Enter the product name to delete: ')
-                    if product_name in products_list:
-                        products_list.remove(product_name)
-                        print(f"Product '{product_name}' deleted successfully!")
-                    else:
-                        print(f"Product '{product_name}' not found.")
+                    # for i, product in enumerate(products_list):
+                    #     print(f"{i} : {product}")
+                    # product_name = input('Enter the product name to delete: ')
+                    # if product_name in products_list:
+                    #     products_list.remove(product_name)
+                    #     print(f"Product '{product_name}' deleted successfully!")
+                    # else:
+                    #     print(f"Product '{product_name}' not found.")
+                    delete_product()
                 else:
                     print("Invalid option. Please try again.")
         elif user_input == 2:
