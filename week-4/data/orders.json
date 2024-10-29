@@ -1,0 +1,74 @@
+[
+    {
+        "customer_name": "John",
+        "customer_address": "Unit 2, 12 Main Street, somewhere",
+        "customer_phone": "0300000099",
+        "status": "preparing",
+        "items": [
+            {
+                "name": "Tuna Toast",
+                "quantity": 1
+            },
+            {
+                "name": "Americano",
+                "quantity": 2
+            }
+        ]
+    },
+    {
+        "customer_name": "Jane",
+        "customer_address": "123 Elm Street",
+        "customer_phone": "0400000011",
+        "status": "completed",
+        "items": [
+            {
+                "name": "Hot Chocolate",
+                "quantity": 1
+            }
+        ]
+    },
+    {
+        "customer_name": "Doe",
+        "customer_address": "12 Main street",
+        "customer_phone": "0984738383",
+        "status": "preparing",
+        "items": [
+            {
+                "name": "Tuna Mayo",
+                "quantity": 4
+            },
+            {
+                "name": "Coke zero",
+                "quantity": 2
+            }
+        ]
+    },
+    {
+        "customer_name": "Mo",
+        "customer_address": "67 small street UK",
+        "customer_phone": "0908060456",
+        "status": "preparing",
+        "items": [
+            {
+                "name": "Toast",
+                "quantity": 2
+            },
+            {
+                "name": "Coca Cola",
+                "quantity": 2
+            }
+        ]
+    },
+    {
+        "customer_name": "Toto",
+        "customer_address": "Small street",
+        "customer_phone": "00807868686",
+        "status": "preparing",
+        "items": [
+            {
+                "name": "Croissant",
+                "quantity": 3
+            }
+        ]
+    }
+]

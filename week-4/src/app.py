@@ -29,11 +29,11 @@ def write_json(file_name, data):
     with open(file_name, 'w') as file:
         json.dump(data, file, indent=4)
 
-def save_products():
-    with open("../data/convert_to_csv/products_list.csv", "w", newline='') as file:
-        writer = csv.writer(file)
-        for product in products_list:
-            writer.writerow([product])  # Write each product as a single row
+# def save_products():
+#     with open("../data/convert_to_csv/products_list.csv", "w", newline='') as file:
+#         writer = csv.writer(file)
+#         for product in products_list:
+#             writer.writerow([product])  # Write each product as a single row
 
 
 def save_couriers():
@@ -41,16 +41,24 @@ def save_couriers():
         writer = csv.writer(file)
         for courier in couriers:
             writer.writerow([courier])  # Write each courier as a single row
-
-def save_orders():
-    with open("../data/week-3/data/convert_to_csv/orders.csv", "w", newline='') as file:
+# Convert to CSV
+def save_products_list_to_csv():
+    with open('../csv_folder/products_list.csv', 'w', newline='') as file:
         writer = csv.writer(file)
         # Write the header row
-        writer.writerow(["customer_name", "customer_address", "customer_phone", "status", "items"])
+        writer.writerow(['product_name', 'product_price'])
+
+        for product in products_list:
+            writer.writerow([product['name'], product['price']])
+# def save_orders():
+#     with open("../data/week-3/data/convert_to_csv/orders.csv", "w", newline='') as file:
+#         writer = csv.writer(file)
+#         # Write the header row
+#         writer.writerow(["customer_name", "customer_address", "customer_phone", "status", "items"])
         
-        for order in orders:
-            items_str = ";".join([f"{item['name']}:{item['quantity']}" for item in order['items']])
-            writer.writerow([order["customer_name"], order["customer_address"], order["customer_phone"], order["status"], items_str])
+#         for order in orders:
+#             items_str = ";".join([f"{item['name']}:{item['quantity']}" for item in order['items']])
+#             writer.writerow([order["customer_name"], order["customer_address"], order["customer_phone"], order["status"], items_str])
 
 
 # Main Menu
@@ -67,7 +75,7 @@ couriers_menu = ['Return to Main Menu', 'Print Courier List', 'Create New Courie
 
 # Load data from files
 couriers = read_file('../data/couriers.txt')
-products_list = read_file('../data/products_list.txt')
+products_list = read_json('../data/products_list.json')
 orders = read_json('../data/orders.json')
 
 # Display Main Menu
@@ -95,7 +103,7 @@ def display_menu_order():
 def display_product_list():
     print("Products List:")
     for product in products_list:
-        print(product)
+        print(f"{product['name']} : £{product['price']}")
     print()
 
 # Add New Product
@@ -328,9 +336,11 @@ def main():
         if user_input == 0:
             # Save data to files
             write_file('../data/couriers.txt', couriers)
-            write_file('../data/products_list.txt', products_list)
+           # write_file('../data/products_list.txt', products_list)
+            write_json('../data/products_list.json', products_list)
             write_json('../data/orders.json', orders)
-            save_products()
+            # save_products()
+            save_products_list_to_csv()
             
             print("Exiting app... Data saved.")
             do_loop = False
@@ -339,33 +349,26 @@ def main():
             while product_loop:
                 display_menu_product()
                 product_input = int(input('Choose an Option: '))
+                print('****************************************')
 
                 if product_input == 0:
                     product_loop = False
                 elif product_input == 1:
                     display_product_list()
                 elif product_input == 2:
-                    # new_product = input('Enter the product name to be added: ')
-                    # products_list.append(new_product)
-                    # print(f"Product '{new_product}' added successfully!")
-                    add_new_product()
+                    new_product_name = input('Enter the product name: ')
+                    new_product_price = float(input('Enter the product price: '))
+
+                    new_product = {
+                        'name':new_product_name,
+                        'price':new_product_price
+                    }
+                    # Append New Product to product_list
+                    products_list.append(new_product)
+                    print(f'New product: {new_product_name} added successfully')
                 elif product_input == 3:
-                    # for i, product in enumerate(products_list):
-                    #     print(f"{i} : {product}")
-                    # product_index = int(input('Choose product index to be edited: '))
-                    # new_name = input('Enter new name: ')
-                    # products_list[product_index] = new_name
-                    # print(f"Product updated to: {new_name}")
                     update_existing_product()
                 elif product_input == 4:
-                    # for i, product in enumerate(products_list):
-                    #     print(f"{i} : {product}")
-                    # product_name = input('Enter the product name to delete: ')
-                    # if product_name in products_list:
-                    #     products_list.remove(product_name)
-                    #     print(f"Product '{product_name}' deleted successfully!")
-                    # else:
-                    #     print(f"Product '{product_name}' not found.")
                     delete_product()
                 else:
                     print("Invalid option. Please try again.")

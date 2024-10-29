@@ -26,21 +26,5 @@
                 "quantity": 1
             }
         ]
-    },
-    {
-        "customer_name": "Shaq",
-        "customer_address": "12 Main street",
-        "customer_phone": "0984738383",
-        "status": "preparing",
-        "items": [
-            {
-                "name": "Tuna Mayo",
-                "quantity": 4
-            },
-            {
-                "name": "Coke zero",
-                "quantity": 2
-            }
-        ]
-    }
+    }    
 ]
