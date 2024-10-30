@@ -29,19 +29,6 @@ def write_json(file_name, data):
     with open(file_name, 'w') as file:
         json.dump(data, file, indent=4)
 
-# def save_products():
-#     with open("../data/convert_to_csv/products_list.csv", "w", newline='') as file:
-#         writer = csv.writer(file)
-#         for product in products_list:
-#             writer.writerow([product])  # Write each product as a single row
-
-
-def save_couriers():
-    with open("../data/week-3/data/convert_to_csv/couriers_list.csv", "w", newline='') as file:
-        writer = csv.writer(file)
-        for courier in couriers:
-            writer.writerow([courier])  # Write each courier as a single row
-# Convert to CSV
 def save_products_list_to_csv():
     with open('../csv_folder/products_list.csv', 'w', newline='') as file:
         writer = csv.writer(file)
@@ -50,16 +37,14 @@ def save_products_list_to_csv():
 
         for product in products_list:
             writer.writerow([product['name'], product['price']])
-# def save_orders():
-#     with open("../data/week-3/data/convert_to_csv/orders.csv", "w", newline='') as file:
-#         writer = csv.writer(file)
-#         # Write the header row
-#         writer.writerow(["customer_name", "customer_address", "customer_phone", "status", "items"])
-        
-#         for order in orders:
-#             items_str = ";".join([f"{item['name']}:{item['quantity']}" for item in order['items']])
-#             writer.writerow([order["customer_name"], order["customer_address"], order["customer_phone"], order["status"], items_str])
 
+def save_courier_to_csv():
+    with open('../csv_folder/couriers.csv', 'w', newline='') as file:
+        writer = csv.writer(file)
+
+        writer.writerow(['courier_name', 'courier_phone_number'])
+        for courier in couriers:
+            writer.writerow([courier['name'], courier['phone']])
 
 # Main Menu
 menu_options = ['Exit App', 'Print Products Menu', 'Print Couriers Menu', 'Print Orders Menu']
@@ -74,8 +59,8 @@ orders_menu = ['Return to Main Menu', 'Print Customer Order', 'Create New Order'
 couriers_menu = ['Return to Main Menu', 'Print Courier List', 'Create New Courier', 'Update Existing Courier', 'Delete Courier']
 
 # Load data from files
-couriers = read_file('../data/couriers.txt')
 products_list = read_json('../data/products_list.json')
+couriers = read_json('../data/couriers.json')
 orders = read_json('../data/orders.json')
 
 # Display Main Menu
@@ -102,10 +87,10 @@ def display_menu_order():
 # Display Product List
 def display_product_list():
     print("Products List:")
-    print("-" * 60)
-    for product in products_list:
-        print(f"{product['name']} : £{product['price']:.2f}")
-    print()
+    print("-" * 50)
+    for i, product in enumerate(products_list):
+        print(f"Product - {i + 1} {product['name']} : £{product['price']:.2f}")
+    print('-' * 50)
 
 # Add New Product
 def create_new_product():
@@ -128,9 +113,7 @@ def create_new_product():
 
 # Update Existing Product
 def update_existing_product():
-        for i, product in enumerate(products_list):
-            print(f"Product {i + 1} : {product['name']} - Price: {product['price']}")
-        print("-" *50)
+        display_product_list()
 
         product_index = int(input('Enter the product number to update: ')) - 1
         if 0 <= product_index < len(products_list):
@@ -149,9 +132,7 @@ def update_existing_product():
 
 # Delete Product
 def delete_product():
-    for i, product in enumerate(products_list):
-        print(f"Product {i + 1} : {product['name']} - £{product['price']:.2f}")
-    print('-' *50)
+    display_product_list()
 
     try:
         remove_product = int(input('Enter the product number to delete: ')) - 1
@@ -173,35 +154,39 @@ def display_menu_courier():
 # Display Courier List
 def display_courier_list():
     print("Courier List:")
+    print('-' *50)
+
     for i, courier in enumerate(couriers):
-        print(f"{i + 1}: {courier}")
-    print()
+        print(f"Courier {i + 1} Name: {courier['name']} - Phone Number: {courier['phone']}")
+    print('-' *50)
 
 # Create New Courier
 def create_new_courier():
-    new_courier = input("Enter the name of the new courier: ").strip()
-    if new_courier:
-        couriers.append(new_courier)
-        print(f"Courier '{new_courier}' added successfully.")
-    else:
-        print("Courier name cannot be empty.")
+    courier_name = input('Enter the courier name: ')
+    courier_phone_number = input('Enter the courier number: ')
+
+    new_courier = {
+        'name': courier_name,
+        'phone': courier_phone_number
+    }
+
+    couriers.append(new_courier)
 
 # Update Existing Courier
 def update_existing_courier():
     display_courier_list()
-    try:
-        courier_index = int(input("Enter the courier number to update: ")) - 1
-        if 0 <= courier_index < len(couriers):
-            new_name = input("Enter the new name for the courier: ").strip()
-            if new_name:
-                couriers[courier_index] = new_name
-                print(f"Courier updated to '{new_name}'.")
-            else:
-                print("Courier name cannot be empty.")
-        else:
-            print("Invalid courier number.")
-    except ValueError:
-        print("Please enter a valid number.")
+
+    courier_index = int(input('Enter the courier number to update: ')) - 1
+
+    if 0 <= courier_index < len(couriers):
+        selected_courier = couriers[courier_index]
+        for key, value in selected_courier.items():
+            new_courier_value = input(f"Enter new {key} (leave blank to keep '{value}'): ")
+            if new_courier_value.strip():
+                selected_courier[key] = new_courier_value
+        print('Courier updated successfully.')
+    else:
+        print('Invalid courier number')
 
 # Delete Courier
 def delete_courier():
@@ -209,8 +194,10 @@ def delete_courier():
     try:
         courier_index = int(input("Enter the courier number to delete: ")) - 1
         if 0 <= courier_index < len(couriers):
-            deleted_courier = couriers.pop(courier_index)
-            print(f"Courier '{deleted_courier}' deleted successfully.")
+            confirm_delete_courier = input(f"Are you sure you want to delete {couriers[courier_index]['name']} ? (yes/no):  ")
+            if confirm_delete_courier.lower() == 'yes':
+                couriers.pop(courier_index)
+                print(f"Courier deleted successfully.")
         else:
             print("Invalid courier number.")
     except ValueError:
@@ -366,10 +353,11 @@ def main():
 
         if user_input == 0:
             # Save data to files
-            write_file('../data/couriers.txt', couriers)
+            write_json('../data/couriers.json', couriers)
             write_json('../data/products_list.json', products_list)
             write_json('../data/orders.json', orders)
             save_products_list_to_csv()
+            save_courier_to_csv()
             
             print("Exiting app... Data saved.")
             do_loop = False

@@ -1,7 +1,5 @@
-Yodel
-DHL
-DPD
-Royal Mail
-Evri
-DistriFast
-
+{'name': 'Bob', 'phone': '0789887889'}
+{'name': 'Jane', 'phone': '0789117889'}
+{'name': 'Doe', 'phone': '0789337889'}
+{'name': 'Toto', 'phone': '0789557889'}
+{'name': 'John', 'phone': '12484939039'}
