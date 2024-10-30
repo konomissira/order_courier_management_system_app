@@ -90,47 +90,78 @@ def display_menu_product():
     print("Products Menu:")
     for i, option in enumerate(products_menu):
         print(f"{i} : {option}")
-    print('****************************************')
+    print("-" *50)
 
 # Display Menu Order
 def display_menu_order():
     print("Orders Menu:")
     for i, option in enumerate(orders_menu):
         print(f"{i} : {option}")
-    print('****************************************')
+    print("-" *50)
 
 # Display Product List
 def display_product_list():
     print("Products List:")
+    print("-" * 60)
     for product in products_list:
-        print(f"{product['name']} : £{product['price']}")
+        print(f"{product['name']} : £{product['price']:.2f}")
     print()
 
 # Add New Product
-def add_new_product():
-    new_product = input('Enter the product name to be added: ')
+def create_new_product():
+    new_product_name = input('Enter the product name: ')
+                    
+    while True:
+        try:
+            new_product_price = float(input('Enter the product price: '))
+            break
+        except ValueError:
+            print('Please enter a numeric value!')
+
+    new_product = {
+        'name':new_product_name,
+        'price':new_product_price
+    }
+    # Append New Product to product_list
     products_list.append(new_product)
-    print(f"Product '{new_product}' added successfully!")
+    print(f'New product: {new_product_name} added successfully')
 
 # Update Existing Product
 def update_existing_product():
         for i, product in enumerate(products_list):
-            print(f"{i} : {product}")
-        product_index = int(input('Choose product index to be edited: '))
-        new_name = input('Enter new name: ')
-        products_list[product_index] = new_name
-        print(f"Product updated to: {new_name}")
+            print(f"Product {i + 1} : {product['name']} - Price: {product['price']}")
+        print("-" *50)
+
+        product_index = int(input('Enter the product number to update: ')) - 1
+        if 0 <= product_index < len(products_list):
+            product_to_update = products_list[product_index]
+
+            for key, value in product_to_update.items():
+                new_value = input(f"Enter new {key} (leave blank to keep '{value}'): ")
+                if new_value.strip():
+                    if key == 'price':
+                        product_to_update[key] = float(new_value)
+                    else:
+                        product_to_update[key] = new_value
+            print('Product updated successfully')
+        else:
+            print('Invalid product number')
 
 # Delete Product
 def delete_product():
     for i, product in enumerate(products_list):
-        print(f"{i} : {product}")
-    product_name = input('Enter the product name to delete: ')
-    if product_name in products_list:
-        products_list.remove(product_name)
-        print(f"Product '{product_name}' deleted successfully!")
-    else:
-        print(f"Product '{product_name}' not found.")
+        print(f"Product {i + 1} : {product['name']} - £{product['price']:.2f}")
+    print('-' *50)
+
+    try:
+        remove_product = int(input('Enter the product number to delete: ')) - 1
+        if 0 <= remove_product < len(products_list):
+            to_confirm = input(f"Are you sure you want to delete {products_list[remove_product]['name']} ? (yes/no):  ")
+            if to_confirm.lower() == 'yes':
+                products_list.pop(remove_product)
+                print("Product deleted successfully.")
+    except ValueError:
+        print('Invalid input. Please, enter a numeric value.')
 
 # Display Menu Courier
 def display_menu_courier():
@@ -336,10 +367,8 @@ def main():
         if user_input == 0:
             # Save data to files
             write_file('../data/couriers.txt', couriers)
-           # write_file('../data/products_list.txt', products_list)
             write_json('../data/products_list.json', products_list)
             write_json('../data/orders.json', orders)
-            # save_products()
             save_products_list_to_csv()
             
             print("Exiting app... Data saved.")
@@ -349,23 +378,14 @@ def main():
             while product_loop:
                 display_menu_product()
                 product_input = int(input('Choose an Option: '))
-                print('****************************************')
+                print("-" *50)
 
                 if product_input == 0:
                     product_loop = False
                 elif product_input == 1:
                     display_product_list()
                 elif product_input == 2:
-                    new_product_name = input('Enter the product name: ')
-                    new_product_price = float(input('Enter the product price: '))
-
-                    new_product = {
-                        'name':new_product_name,
-                        'price':new_product_price
-                    }
-                    # Append New Product to product_list
-                    products_list.append(new_product)
-                    print(f'New product: {new_product_name} added successfully')
+                    create_new_product()
                 elif product_input == 3:
                     update_existing_product()
                 elif product_input == 4:
