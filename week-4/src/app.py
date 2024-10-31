@@ -206,41 +206,41 @@ def delete_courier():
 # Display Customer Order
 def display_customer_order():
     print("Customer Orders:")
-    for order in orders:
-        print(f"Customer Name: {order['customer_name']}")
-        print(f"Address: {order['customer_address']}")
-        print(f"Phone: {order['customer_phone']}")
-        print(f"Status: {order['status']}")
-        print("Items:")
-        for item in order['items']:
-            print(f"  - {item['name']} x {item['quantity']}")
-        print()
+    for i, order in enumerate(orders):
+        print(f"Order{i + 1} : Name: {order['customer_name']} - Phone: {order['customer_phone']}  - Status: {order['status']}")
+    print('-' *70)
 
 # Create New Order
 def create_new_order():
     customer_name = input("Enter the customer's name: ")
     customer_address = input("Enter the customer's address: ")
     customer_phone = input("Enter the customer's phone number: ")
-    
-    order_items = []
-    while True:
-        item_name = input("Enter an item (or type 'done' to finish): ").strip()
-        if item_name.lower() == 'done':
-            break
-        
-        item_quantity = int(input(f"Enter the quantity for {item_name}: "))
-        order_items.append({'name': item_name, 'quantity': item_quantity})
 
-    new_order = {
-        "customer_name": customer_name,
-        "customer_address": customer_address,
-        "customer_phone": customer_phone,
-        "status": "preparing",
-        "items": order_items
-    }
+    display_product_list()
     
-    orders.append(new_order)  # Add the new order to the list
-    print(f"New order created successfully for {customer_name}.")
+    # items = []
+    # while True:
+    #     product_index = (int(input("Choose a product number to add it your order"))) - 1
+    #     if 0 <= product_index < len(products_list):
+    #print(items)
+    # while True:
+    #     product_index = input("Choose a product number to add it your order (or type 'done' to finish): ").strip()
+    #     if product_index.lower() == 'done':
+    #         break
+        
+    #     item_quantity = int(input(f"Enter the quantity for {item_name}: "))
+    #     order_items.append({'name': item_name, 'quantity': item_quantity})
+
+    # new_order = {
+    #     "customer_name": customer_name,
+    #     "customer_address": customer_address,
+    #     "customer_phone": customer_phone,
+    #     "status": "preparing",
+    #     "items": order_items
+    # }
+    
+    # orders.append(new_order)  # Add the new order to the list
+    # print(f"New order created successfully for {customer_name}.")
 
 # Update Order Status
 def update_order_status():
