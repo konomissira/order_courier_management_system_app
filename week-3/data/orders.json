@@ -58,5 +58,28 @@
                 "quantity": 2
             }
         ]
+    },
+    {
+        "customer_name": "Jeff",
+        "customer_address": "100 Main street City",
+        "customer_phone": "09086363636",
+        "status": "Completed",
+        "items": [
+            {
+                "name": "Toast",
+                "quantity": 2
+            },
+            {
+                "name": "Coca Cola",
+                "quantity": 2
+            }
+        ]
+    },
+    {
+        "customer_name": "Alex",
+        "customer_address": "12 Main street",
+        "customer_phone": "0897979696",
+        "status": "preparing",
+        "items": []
     }
 ]

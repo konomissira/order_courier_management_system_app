@@ -323,6 +323,9 @@ def main():
 
     while do_loop:
         display_main_menu()
+        print("0 : Exit")
+        print("1 : Exit")
+        print("2 : Exit")
         user_input = int(input('Choose an Option: '))
 
         if user_input == 0:

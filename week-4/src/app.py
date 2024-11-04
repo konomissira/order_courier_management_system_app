@@ -46,6 +46,16 @@ def save_courier_to_csv():
         for courier in couriers:
             writer.writerow([courier['name'], courier['phone']])
 
+def save_orders_to_csv():
+    with open('../csv_folder/orders.csv', 'w', newline='') as file:
+        writer = csv.writer(file)
+
+        # Create Header for CSV File.
+        writer.writerow(['customer_name', 'customer_address', 'customer_phone', 'courier', 'status', 'items'])
+        for order in orders:
+            writer.writerow([order['customer_name'], order['customer_address'], order['customer_phone'], order['courier'], order['status'], order['items']])
+
+
 # Main Menu
 menu_options = ['Exit App', 'Print Products Menu', 'Print Couriers Menu', 'Print Orders Menu']
 
@@ -212,135 +222,144 @@ def display_customer_order():
 
 # Create New Order
 def create_new_order():
+    # Get customer details
     customer_name = input("Enter the customer's name: ")
     customer_address = input("Enter the customer's address: ")
     customer_phone = input("Enter the customer's phone number: ")
 
+    # Display product list and get a comma-separated list of product indexes
     display_product_list()
-    
-    # items = []
-    # while True:
-    #     product_index = (int(input("Choose a product number to add it your order"))) - 1
-    #     if 0 <= product_index < len(products_list):
-    #print(items)
-    # while True:
-    #     product_index = input("Choose a product number to add it your order (or type 'done' to finish): ").strip()
-    #     if product_index.lower() == 'done':
-    #         break
-        
-    #     item_quantity = int(input(f"Enter the quantity for {item_name}: "))
-    #     order_items.append({'name': item_name, 'quantity': item_quantity})
+    items = input("Enter the product numbers as a comma-separated list (e.g., 1,3,4): ")
+    items = items.replace(" ", "")  # Remove any spaces for a clean input string
 
-    # new_order = {
-    #     "customer_name": customer_name,
-    #     "customer_address": customer_address,
-    #     "customer_phone": customer_phone,
-    #     "status": "preparing",
-    #     "items": order_items
-    # }
-    
-    # orders.append(new_order)  # Add the new order to the list
-    # print(f"New order created successfully for {customer_name}.")
+    # Display couriers list to get courier selection
+    display_courier_list()
+    while True:
+        try:
+            courier_index = int(input("Enter the courier number: ")) - 1
+            if 0 <= courier_index < len(couriers):
+                break
+            else:
+                print("Please enter a valid courier number.")
+        except ValueError:
+            print("Please enter a number.")
+
+    # Set the initial status and create the new order dictionary
+    new_order = {
+        "customer_name": customer_name,
+        "customer_address": customer_address,
+        "customer_phone": customer_phone,
+        "courier": courier_index,
+        "status": "preparing",
+        "items": items  # Store the comma-separated string
+    }
+
+    # Append the new order to the orders list
+    orders.append(new_order)
+    print("New order created successfully!")
 
 # Update Order Status
-def update_order_status():
-    if not orders:
-        print("No orders available to update.")
-        return
+def update_existing_order_status():
+    # Status options
+    order_status_list = ["preparing", "out for delivery", "delivered"]
 
-    print("Existing Orders:")
+    # Display orders with index values
+    print("Orders List:")
     for i, order in enumerate(orders):
-        print(f"Order {i + 1}: {order['customer_name']} (Status: {order['status']})")
+        print(f"Order {i + 1}: Name: {order['customer_name']} - Status: {order['status']}")
+    print("-" * 40)
 
     try:
-        order_index = int(input("Enter the order number to update the status: ")) - 1  # Adjust for 0-based index
-
+        # Get the order index from the user
+        order_index = int(input("Enter the order number to update: ")) - 1
         if 0 <= order_index < len(orders):
-            new_status = input("Enter the new status (e.g., preparing, completed, cancelled): ")
-            orders[order_index]['status'] = new_status  # Update the status
-            print(f"Order {orders[order_index]['customer_name']}'s status updated to '{new_status}'.")
+            selected_order = orders[order_index]
+
+            # Display status options with index values
+            print("\nOrder Status Options:")
+            for i, status in enumerate(order_status_list):
+                print(f"{i + 1}. {status}")
+            print("-" * 40)
+
+            # Get the new status index from the user
+            status_index = int(input("Enter the new status number: ")) - 1
+            if 0 <= status_index < len(order_status_list):
+                # Update the order status
+                selected_order["status"] = order_status_list[status_index]
+                print("Order status updated successfully!")
+            else:
+                print("Invalid status number.")
         else:
             print("Invalid order number.")
     except ValueError:
-        print("Invalid input. Please enter a number.")
+        print("Please enter a valid number.")
 
 # Update Existing Order
 def update_existing_order():
-    if not orders:
-        print("No orders available to update.")
-        return
-
-    print("Existing Orders:")
+    # Display orders list with index values
+    print("Orders List:")
     for i, order in enumerate(orders):
-        print(f"Order {i + 1}: {order['customer_name']} (Status: {order['status']})")
+        print(f"Order {i + 1}: Name: {order['customer_name']} - Address: {order['customer_address']} - Phone: {order['customer_phone']} - Courier: {order['courier']} - Status: {order['status']} - Items: {order['items']}")
+    print("-" * 40)
 
     try:
-        order_index = int(input("Enter the order number to update: ")) - 1  # Adjust for 0-based index
-
+        # Get the order index from the user
+        order_index = int(input("Enter the order number to update: ")) - 1
         if 0 <= order_index < len(orders):
-            # Update customer details if needed
-            update_choice = input("Do you want to update customer details (yes/no)? ").strip().lower()
-            if update_choice == 'yes':
-                orders[order_index]['customer_name'] = input("Enter the new customer's name: ")
-                orders[order_index]['customer_address'] = input("Enter the new customer's address: ")
-                orders[order_index]['customer_phone'] = input("Enter the new customer's phone number: ")
+            selected_order = orders[order_index]
 
-            # Update status
-            new_status = input("Enter the new status (e.g., preparing, completed, cancelled): ")
-            orders[order_index]['status'] = new_status
-
-            # Update items
-            item_update_choice = input("Do you want to update items (yes/no)? ").strip().lower()
-            if item_update_choice == 'yes':
-                order_items = orders[order_index]['items']
-                while True:
-                    print("Current items:")
-                    for j, item in enumerate(order_items):
-                        print(f"  {j + 1}: {item['name']} (x{item['quantity']})")
-                    
-                    item_choice = int(input("Enter the item number to update or type 0 to add a new item: ")) - 1
-
-                    if item_choice == -1:
-                        # Add new item
-                        item_name = input("Enter the name of the new item: ")
-                        item_quantity = int(input("Enter the quantity for the new item: "))
-                        order_items.append({'name': item_name, 'quantity': item_quantity})
-                    elif 0 <= item_choice < len(order_items):
-                        # Update existing item
-                        new_quantity = int(input(f"Enter the new quantity for {order_items[item_choice]['name']}: "))
-                        order_items[item_choice]['quantity'] = new_quantity
+            # Iterate over each key-value pair in the selected order
+            for key, value in selected_order.items():
+                # Prompt the user for a new value, showing the current value
+                new_value = input(f"Enter new {key} (leave blank to keep '{value}'): ").strip()
+                
+                # Update the property only if new input is provided
+                if new_value:
+                    # Convert to int if updating courier or items
+                    if key in ["courier"]:
+                        selected_order[key] = int(new_value)
+                    elif key == "items":
+                        selected_order[key] = new_value.replace(" ", "")  # Remove spaces for a clean items string
                     else:
-                        print("Invalid item number.")
-                    
-                    continue_choice = input("Do you want to update another item (yes/no)? ").strip().lower()
-                    if continue_choice != 'yes':
-                        break
+                        selected_order[key] = new_value
 
-            print(f"Order {orders[order_index]['customer_name']}'s details updated successfully.")
+            print("Order updated successfully!")
         else:
             print("Invalid order number.")
     except ValueError:
-        print("Invalid input. Please enter a number.")
+        print("Please enter a valid number.")
 
 # Delete order
 def delete_order():
     if not orders:
         print("No orders to delete.")
         return
-
-    print("Existing Orders:")
+    
+    # Display orders list with index values
+    print("Orders List:")
     for i, order in enumerate(orders):
-        print(f"Order {i + 1}: {order['customer_name']} (Status: {order['status']})")
+        print(f"Order {i + 1}: Name: {order['customer_name']} - Phone: {order['customer_phone']} - Status: {order['status']}")
+    print("-" * 40)
 
     try:
+        # Get the order index from the user
         order_index = int(input("Enter the order number to delete: ")) - 1
+        
+        # Check if the index is valid
         if 0 <= order_index < len(orders):
-            deleted_order = orders.pop(order_index)
-            print(f"Deleted order for {deleted_order['customer_name']}.")
+            # Confirm deletion
+            confirm = input(f"Are you sure you want to delete Order {order_index + 1}? (yes/no): ").strip().lower()
+            if confirm == "yes":
+                # Delete the order
+                orders.pop(order_index)
+                print("Order deleted successfully!")
+            else:
+                print("Order deletion canceled.")
         else:
             print("Invalid order number.")
     except ValueError:
-        print("Invalid input.")
+        print("Please enter a valid number.")
+
 
 
 # Main app loop
@@ -358,6 +377,7 @@ def main():
             write_json('../data/orders.json', orders)
             save_products_list_to_csv()
             save_courier_to_csv()
+            save_orders_to_csv()
             
             print("Exiting app... Data saved.")
             do_loop = False
@@ -410,7 +430,7 @@ def main():
                 elif order_input == 2:
                     create_new_order()
                 elif order_input == 3:
-                    update_order_status()
+                    update_existing_order_status()
                 elif order_input == 4:
                     update_existing_order()
                 elif order_input == 5:
