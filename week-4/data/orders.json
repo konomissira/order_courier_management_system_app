@@ -12,7 +12,7 @@
         "customer_address": "12 Small Street, LONDON, WH1 2ER",
         "customer_phone": "0789887334",
         "courier": 3,
-        "status": "progressing",
+        "status": "out for delivery",
         "items": "1, 3, 4"
     },
     {
@@ -24,11 +24,19 @@
         "items": "1, 3, 4"
     },
     {
-        "customer_name": "Jeanne",
-        "customer_address": "Unit 10, 12 Main Street, LONDON, WH1 2ER",
-        "customer_phone": "0789887334",
-        "courier": 2,
-        "status": "completed",
-        "items": "1, 3, 4"
+        "customer_name": "Homer",
+        "customer_address": "23 Main Street",
+        "customer_phone": "058595949",
+        "courier": 3,
+        "status": "delivered",
+        "items": "5,7,9"
+    },
+    {
+        "customer_name": "Dupont",
+        "customer_address": "32 Small Street",
+        "customer_phone": "0784838393",
+        "courier": 4,
+        "status": "preparing",
+        "items": "4,5,7,9"
     }
 ]
