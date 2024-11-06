@@ -38,5 +38,13 @@
         "courier": 4,
         "status": "preparing",
         "items": "4,5,7,9"
+    },
+    {
+        "customer_name": "Bart Simpson",
+        "customer_address": "12 Main Street Springfield",
+        "customer_phone": "098838383",
+        "courier": 3,
+        "status": "preparing",
+        "items": "2,3,8,2,2"
     }
 ]
