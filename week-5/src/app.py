@@ -1,8 +1,6 @@
 import json
 import csv
 
-# docker exec -it gen_database psql -U generation -d mini_project
-
 # Load CSV File Function
 def load_csv(file_name):
     """Loads data from a CSV file and returns a list of dictionaries."""
