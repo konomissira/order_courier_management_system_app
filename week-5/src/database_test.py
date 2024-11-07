@@ -1,45 +1,70 @@
-import json
-import csv
+import psycopg2 as psycopg
+from dotenv import load_dotenv
+import os
 
-# docker exec -it gen_database psql -U generation -d mini_project
+# Load environment variables from .env file
+load_dotenv()
 
-# Load CSV File Function
-def load_csv(file_name):
-    """Loads data from a CSV file and returns a list of dictionaries."""
-    data = []
-    try:
-        with open(file_name, newline='') as file:
-            reader = csv.DictReader(file)
-            data.extend(row for row in reader)
-    except FileNotFoundError:
-        print(f"{file_name} not found.")
-    return data
+# Initialize Connection
+conn = psycopg.connect(
+    dbname=os.getenv("POSTGRES_DB"),
+    user=os.getenv("POSTGRES_USER"),
+    password=os.getenv("POSTGRES_PASSWORD"),
+    host=os.getenv("POSTGRES_HOST"),
+    port=os.getenv("POSTGRES_PORT")
+)
 
-def save_products_list_to_csv():
-    with open('../data/products_list.csv', 'w', newline='') as file:
-        writer = csv.writer(file)
-        # Write the header row
-        writer.writerow(['product_name', 'product_price'])
+cursor = conn.cursor()
 
-        for product in products_list:
-            writer.writerow([product['product_name'], product['product_price']])
+# Load Data  From Database
+def load_products_from_db():
+    cursor.execute("SELECT product_name, product_price FROM products")
+    products = cursor.fetchall()
+    return [{'product_name': row[0], 'product_price': row[1]} for row in products]
 
-def save_courier_to_csv():
-    with open('../data/couriers.csv', 'w', newline='') as file:
-        writer = csv.writer(file)
+def load_couriers_from_db():
+    cursor.execute("SELECT courier_name, courier_phone_number FROM couriers")
+    couriers = cursor.fetchall()
+    return [{'courier_name': row[0], 'courier_phone_number': row[1]} for row in couriers]
 
-        writer.writerow(['courier_name', 'courier_phone_number'])
-        for courier in couriers:
-            writer.writerow([courier['courier_name'], courier['courier_phone_number']])
+def load_orders_from_db():
+    cursor.execute("SELECT customer_name, customer_address, customer_phone, courier, status, items FROM orders")
+    orders = cursor.fetchall()
+    return [{'customer_name': row[0], 'customer_address': row[1], 'customer_phone': row[2],
+             'courier': row[3], 'status': row[4], 'items': row[5]} for row in orders]
 
-def save_orders_to_csv():
-    with open('../data/orders.csv', 'w', newline='') as file:
-        writer = csv.writer(file)
 
-        # Create Header for CSV File.
-        writer.writerow(['customer_name', 'customer_address', 'customer_phone', 'courier', 'status', 'items'])
-        for order in orders:
-            writer.writerow([order['customer_name'], order['customer_address'], order['customer_phone'], order['courier'], order['status'], order['items']])
+def save_products_list_to_db():
+    # Clear Table before saving Data Into the Database
+    cursor.execute("DELETE FROM products")
+    for product in products_list:
+        cursor.execute(
+            "INSERT INTO products (product_name, product_price) VALUES (%s, %s)",
+            (product['product_name'], product['product_price'])
+        )
+    conn.commit()
+
+def save_couriers_to_db():
+    # Clear Table before saving Data Into the Database
+    cursor.execute("DELETE FROM couriers")
+    for courier in couriers:
+        cursor.execute(
+            "INSERT INTO couriers (courier_name, courier_phone_number) VALUES (%s, %s)",
+            (courier['courier_name'], courier['courier_phone_number'])
+        )
+    conn.commit()
+
+def save_orders_to_db():
+    # Clear Table before saving Data Into the Database
+    cursor.execute("DELETE FROM orders")
+    for order in orders:
+        cursor.execute(
+            "INSERT INTO orders (customer_name, customer_address, customer_phone, courier, status, items) "
+            "VALUES (%s, %s, %s, %s, %s, %s)",
+            (order['customer_name'], order['customer_address'], order['customer_phone'],
+             order['courier'], order['status'], order['items'])
+        )
+    conn.commit()
 
 
 # Main Menu
@@ -54,10 +79,9 @@ orders_menu = ['Return to Main Menu', 'Print Customer Order', 'Create New Order'
 # Couriers Menu
 couriers_menu = ['Return to Main Menu', 'Print Courier List', 'Create New Courier', 'Update Existing Courier', 'Delete Courier']
 
-products_list = load_csv('../data/products_list.csv')
-couriers = load_csv('../data/couriers.csv')
-orders = load_csv('../data/orders.csv')
-
+products_list = load_products_from_db()
+couriers = load_couriers_from_db()
+orders = load_orders_from_db()
 
 # Display Main Menu
 def display_main_menu():
@@ -357,10 +381,10 @@ def main():
         user_input = int(input('Choose an Option: '))
 
         if user_input == 0:
-            # Save data to files
-            save_products_list_to_csv()
-            save_courier_to_csv()
-            save_orders_to_csv()
+            # Save data to database
+            save_products_list_to_db()
+            save_couriers_to_db()
+            save_orders_to_db()
             
             print("Exiting app... Data saved.")
             do_loop = False

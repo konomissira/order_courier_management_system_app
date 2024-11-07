@@ -46,5 +46,13 @@
         "courier": 3,
         "status": "preparing",
         "items": "2,3,8,2,2"
+    },
+    {
+        "customer_name": "Evans",
+        "customer_address": "12 Main street",
+        "customer_phone": "0784849393",
+        "courier": 1,
+        "status": "preparing",
+        "items": "2,4,8"
     }
 ]
