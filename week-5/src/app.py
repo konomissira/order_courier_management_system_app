@@ -1,7 +1,6 @@
 import json
 import csv
 
-
 # Load CSV File Function
 def load_csv(file_name):
     """Loads data from a CSV file and returns a list of dictionaries."""
