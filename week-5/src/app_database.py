@@ -16,17 +16,19 @@ conn = psycopg.connect(
 
 cursor = conn.cursor()
 
-# Load Data  From Database
+# Load Data  From products table in Database
 def load_products_from_db():
     cursor.execute("SELECT product_name, product_price FROM products")
     products = cursor.fetchall()
     return [{'product_name': row[0], 'product_price': row[1]} for row in products]
 
+# Load Data  From couriers table in Database
 def load_couriers_from_db():
     cursor.execute("SELECT courier_name, courier_phone_number FROM couriers")
     couriers = cursor.fetchall()
     return [{'courier_name': row[0], 'courier_phone_number': row[1]} for row in couriers]
 
+# Load Data  From orders table in Database
 def load_orders_from_db():
     cursor.execute("SELECT customer_name, customer_address, customer_phone, courier, status, items FROM orders")
     orders = cursor.fetchall()
