@@ -1,28 +1,34 @@
-from create_connection import cursor
-from create_connection import conn
+from create_connection import cursor, conn
 
-from manage_products_database import display_product_list
-from manage_couriers_database import display_courier_list
-from manage_couriers_database import couriers
+from manage_products_database import display_product_list, products_list
+from manage_couriers_database import display_courier_list, couriers
 
 # Load Data  From orders table in Database
 def load_orders_from_db():
-    cursor.execute("SELECT customer_name, customer_address, customer_phone, courier, status, items FROM orders")
-    orders = cursor.fetchall()
-    return [{'customer_name': row[0], 'customer_address': row[1], 'customer_phone': row[2],
-             'courier': row[3], 'status': row[4], 'items': row[5]} for row in orders]
+    try:
+        cursor.execute("SELECT customer_name, customer_address, customer_phone, courier, status, items FROM orders")
+        orders = cursor.fetchall()
+        return [{'customer_name': row[0], 'customer_address': row[1], 'customer_phone': row[2],
+                'courier': row[3], 'status': row[4], 'items': row[5]} for row in orders]
+    except ValueError as e:
+        print(f"An error occured while loading orders: {e}")
+        return[]
 
 def save_orders_to_db():
-    # Clear Table before saving Data Into the Database
-    cursor.execute("DELETE FROM orders")
-    for order in orders:
-        cursor.execute(
-            "INSERT INTO orders (customer_name, customer_address, customer_phone, courier, status, items) "
-            "VALUES (%s, %s, %s, %s, %s, %s)",
-            (order['customer_name'], order['customer_address'], order['customer_phone'],
-             order['courier'], order['status'], order['items'])
-        )
-    conn.commit()
+    try:
+        # Clear Table before saving Data Into the Database
+        cursor.execute("DELETE FROM orders")
+        for order in orders:
+            cursor.execute(
+                "INSERT INTO orders (customer_name, customer_address, customer_phone, courier, status, items) "
+                "VALUES (%s, %s, %s, %s, %s, %s)",
+                (order['customer_name'], order['customer_address'], order['customer_phone'],
+                order['courier'], order['status'], order['items'])
+            )
+        conn.commit()
+        print("Orders saved to database successfully.")
+    except Exception as e:
+        print(f"An error occured while saving orders: {e}")
 
 orders = load_orders_from_db()
 
@@ -35,17 +41,36 @@ def display_customer_order():
 
 # Create New Order
 def create_new_order():
-    # Get customer details
-    customer_name = input("Enter the customer's name: ")
-    customer_address = input("Enter the customer's address: ")
-    customer_phone = input("Enter the customer's phone number: ")
+    # Get customer details with validation
+    while True:
+        customer_name = input("Enter the customer's name: ").strip()
+        if customer_name:
+            break
+        print("Customer name cannot be empty.")
+
+    customer_address = input("Enter the customer's address: ").strip()
+
+    while True:
+        customer_phone = input("Enter the customer's phone number: ").strip()
+        if customer_phone.isdigit() and 7 <= len(customer_phone) <= 15:
+            break
+        print("Please enter a valid phone number with 7-15 digits.")
 
     # Display product list and get a comma-separated list of product indexes
     display_product_list()
-    items = input("Enter the product numbers as a comma-separated list (e.g., 1,3,4): ")
-    items = items.replace(" ", "")  # Remove any spaces for a clean input string
+    while True:
+        items = input("Enter the product numbers as a comma-separated list (e.g., 1,3,4): ").replace(" ", "")
+        try:
+            # Ensure all items are valid integers and within product list range
+            product_indexes = [int(i) - 1 for i in items.split(",") if i]
+            if all(0 <= idx < len(products_list) for idx in product_indexes):
+                break
+            else:
+                print("One or more product numbers are invalid. Please try again.")
+        except ValueError:
+            print("Invalid input. Please enter numbers separated by commas.")
 
-    # Display couriers list to get courier selection
+    # Display couriers list and get courier selection with validation
     display_courier_list()
     while True:
         try:
@@ -128,11 +153,13 @@ def update_existing_order():
                 
                 # Update the property only if new input is provided
                 if new_value:
-                    # Convert to int if updating courier or items
-                    if key in ["courier"]:
-                        selected_order[key] = int(new_value)
+                    if key == "courier":
+                        if new_value.isdigit() and 0 <= int(new_value) - 1 < len(couriers):
+                            selected_order[key] = int(new_value) - 1
+                        else:
+                            print("Invalid courier number.")
                     elif key == "items":
-                        selected_order[key] = new_value.replace(" ", "")  # Remove spaces for a clean items string
+                        selected_order[key] = new_value.replace(" ", "")  # Clean up items string
                     else:
                         selected_order[key] = new_value
 
