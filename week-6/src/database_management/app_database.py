@@ -32,7 +32,12 @@ def main():
 
     while do_loop:
         display_main_menu()
-        user_input = int(input('Choose an Option: '))
+
+        try:
+            user_input = int(input('Choose an Option: '))
+        except ValueError:
+            print("Invalid input. Please enter a number.")
+            continue
 
         if user_input == 0:
             # Save Data To Database
@@ -46,7 +51,13 @@ def main():
             product_loop = True
             while product_loop:
                 display_menu_product()
-                product_input = int(input('Choose an Option: '))
+
+                try:
+                    product_input = int(input('Choose an Option: '))
+                except ValueError:
+                    print("Invalid input. Please enter a number.")
+                    continue
+
                 print("-" *50)
 
                 if product_input == 0:
@@ -65,7 +76,13 @@ def main():
             courier_loop = True
             while courier_loop:
                 display_menu_courier()
-                courier_input = int(input('Choose an Option: '))
+
+                try:
+                    courier_input = int(input('Choose an Option: '))
+                except ValueError:
+                    print('Invalid input. Please enter a number.')
+                    continue
+
                 if courier_input == 0:
                     courier_loop = False
                 elif courier_input == 1:
@@ -82,7 +99,12 @@ def main():
             order_loop = True
             while order_loop:
                 display_menu_order()
-                order_input = int(input('Choose an Option: '))
+
+                try:
+                    order_input = int(input('Choose an Option: '))
+                except ValueError:
+                    print('Invalid input. Please enter a number.')
+                    continue
 
                 if order_input == 0:
                     order_loop = False
