@@ -16,6 +16,7 @@ A simple command-line application designed to manage products, couriers, and cus
 -   Functions Overview
 -   Error Handling
 -   Testing
+-   Project Reflections
 -   License
 
 ### Installation:
@@ -146,6 +147,13 @@ To ensure the application is working correctly, automated tests have been writte
 -   Ensure that the database and any necessary configurations (like .env files) are properly set up before running the tests.
 -   Use pytest for testing since it is a powerful and widely-used testing framework for Python.
 -   Always ensure the relative imports are configured correctly when testing within a project structure.
+
+## Project Reflections:
+
+-   Designed: the project is designed to be modular, with separate modules for managing products, couriers, and orders. This separation allowed to implement each feature independently, ensuring that the application meets its main requirements: adding, updating, deleting, and displaying information efficiently. Using a PostgreSQL database provided reliable data storage, meeting the requirement for data persistence.
+-   Requirement: To guarantee the project’s requirements, automated tests was wrote using pytest on 2 functions: create a new product and create new courier functions. These tests validated those two functions. Additionally, input's validation was implemented to ensure that only valid data could be processed, preventing common user errors. Regular testing helped identify and address any bugs early on.
+-   Future improvement: If I had more time, it would be good to add a graphical user interface using tkinter framework to make the application more user-friendly. It will be great as well to deploy the project.
+-   Most challenging: The most challenging part of the project was implementing unit tests. Setting up effective tests required not only ensuring that each function behaved as expected but also dealing with import paths when working within a package structure. Using . before imports for relative paths was particularly tricky at first, as it caused errors until I fully understood the import structure within Python packages. After some troubleshooting and research, I was able to configure my imports correctly, which allowed my tests to run smoothly. This experience taught me a lot about Python’s module system and improved my problem-solving skills in debugging.
 
 ## License
 
