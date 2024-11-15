@@ -15,6 +15,7 @@ A simple command-line application designed to manage products, couriers, and cus
 -   Usage
 -   Functions Overview
 -   Error Handling
+-   Testing
 -   License
 
 ### Installation:
@@ -120,6 +121,31 @@ The application check users' input for handling errors such as follows:
 -   Input Validation: Ensures user inputs are within expected formats, e.g., numeric entries where required.
 -   Range Checks: Prevents index out-of-bounds errors by checking if selections fall within valid ranges.
 -   Confirmation Prompts: Ensures that deletions are confirmed to avoid accidental data loss.
+
+## Testing:
+
+To ensure the application is working correctly, automated tests have been written. Follow the steps below to run the tests:
+
+-   Set Up Relative Imports: If you encounter errors like ModuleNotFoundError, make sure to use relative imports in the code. For example:
+    Update imports in manage_orders_database.py, manage_products_database.py, and manage_couriers_database.py like this:
+    from .manage_products_database import display_product_list, products_list
+    from .manage_couriers_database import couriers
+    from .manage_orders_database import orders
+
+-   Install Dependencies: Running the following command:
+    pip install -r requirements.txt
+
+-   Run All Tests: Use pytest to run all tests in the tests folder:
+    pytest
+
+-   Run a Specific Test File: It is possible to run a specific test file, by using:
+    pytest tests/test_manage_products_database.py
+
+### Notes:
+
+-   Ensure that the database and any necessary configurations (like .env files) are properly set up before running the tests.
+-   Use pytest for testing since it is a powerful and widely-used testing framework for Python.
+-   Always ensure the relative imports are configured correctly when testing within a project structure.
 
 ## License
 
