@@ -1,4 +1,4 @@
-# DE-NAT3 Mini Project (Application for Coffee Shop):
+# Full-Stack Application for Coffee Shop:
 
 A simple command-line application designed to manage products, couriers, and customer orders. The application provides an intuitive interface for users to create, update, view, and delete entries for products, couriers, and orders.
 
