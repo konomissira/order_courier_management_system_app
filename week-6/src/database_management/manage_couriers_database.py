@@ -1,4 +1,4 @@
-from create_connection import cursor, conn
+from .create_connection import cursor, conn
 #from create_connection import conn
 
 # Load Data  From couriers table in Database

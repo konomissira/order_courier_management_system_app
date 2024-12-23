@@ -1,4 +1,4 @@
-from create_connection import cursor, conn
+from .create_connection import cursor, conn
 
 # Load Data  From products table in Database
 def load_products_from_db():
