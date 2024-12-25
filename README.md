@@ -25,7 +25,7 @@ A simple command-line application designed to manage products, couriers, and cus
 
 git clone https://github.com/generation-de-nat3/mahamadou_miniproject.git
 
--   Install dependencies: To install depencies running the following command:
+-   Install dependencies: To install dependencies running the following command:
     -   pip install -r requirements.txt
 -   Set up the database:
     Configure a PostgreSQL database and update the connection details in the code as required.
