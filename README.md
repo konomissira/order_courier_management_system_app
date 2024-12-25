@@ -23,7 +23,7 @@ A simple command-line application designed to manage products, couriers, and cus
 
 -   This project is private, so in order to install it the permission of Generation UK is required. After permission from Generation UK. To install the application use the following git command to clone the project:
 
-git clone https://github.com/generation-de-nat3/mahamadou_miniproject.git
+git clone https://github.com/konomissira/order_courier_management_system_app.git
 
 -   Install dependencies: To install dependencies running the following command:
     -   pip install -r requirements.txt
